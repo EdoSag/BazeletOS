@@ -12,6 +12,9 @@ publish.workspace = true
 branding.workspace = true
 i18n.workspace = true
 ui.workspace = true
+iced_core = "0.14.0"
+iced_widget = "0.14.2"
+jiff = "1"
 
 [lints]
 workspace = true
