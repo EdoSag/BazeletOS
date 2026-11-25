@@ -1,0 +1,19 @@
+[package]
+name = "about"
+description = "The app that says what this system is. Also the first app built on the system toolkit."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+branding.workspace = true
+i18n.workspace = true
+ui.workspace = true
+iced_core = "0.14.0"
+iced_widget = "0.14.2"
+
+[lints]
+workspace = true
