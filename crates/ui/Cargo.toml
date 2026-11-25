@@ -1,0 +1,15 @@
+[package]
+name = "ui"
+description = "Layout direction helpers so every screen mirrors for right-to-left languages."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+i18n.workspace = true
+
+[lints]
+workspace = true
