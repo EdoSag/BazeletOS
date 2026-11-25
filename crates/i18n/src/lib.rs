@@ -5,6 +5,10 @@
 //! Unicode direction controls so that a phone number or an English name
 //! inside a Hebrew sentence is drawn in the right order.
 
+pub mod messages;
+
+pub use messages::{Text, tr, tr_name};
+
 /// Whether text and layout run left-to-right or right-to-left.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Direction {
@@ -53,6 +57,39 @@ impl Locale {
         Self::ALL
             .into_iter()
             .find(|locale| locale.tag().eq_ignore_ascii_case(language))
+    }
+
+    /// The locale chosen by the POSIX variables `LC_ALL`, `LC_MESSAGES` and
+    /// `LANG`, in that order of precedence. `get` looks a variable up.
+    ///
+    /// Unset, empty or unsupported values fall through to the next variable,
+    /// and to English at the end.
+    #[must_use]
+    pub fn from_env(get: impl Fn(&str) -> Option<String>) -> Self {
+        ["LC_ALL", "LC_MESSAGES", "LANG"]
+            .into_iter()
+            .filter_map(get)
+            .find_map(|value| Self::from_tag(&value))
+            .unwrap_or(Self::En)
+    }
+
+    /// The value to give `LANG` so that programs started from here use this
+    /// locale.
+    #[must_use]
+    pub const fn posix(self) -> &'static str {
+        match self {
+            Self::En => "en_US.UTF-8",
+            Self::He => "he_IL.UTF-8",
+        }
+    }
+
+    /// The next locale, for a switch that cycles through the languages.
+    #[must_use]
+    pub const fn next(self) -> Self {
+        match self {
+            Self::En => Self::He,
+            Self::He => Self::En,
+        }
     }
 }
 
@@ -174,5 +211,38 @@ mod tests {
     #[test]
     fn empty_text_is_still_balanced() {
         assert_eq!(isolate_ltr(""), "\u{2066}\u{2069}");
+    }
+
+    #[test]
+    fn locale_from_environment_follows_posix_precedence() {
+        let env = |pairs: &'static [(&'static str, &'static str)]| {
+            move |name: &str| {
+                pairs
+                    .iter()
+                    .find(|(key, _)| *key == name)
+                    .map(|(_, value)| (*value).to_owned())
+            }
+        };
+        assert_eq!(Locale::from_env(env(&[])), Locale::En);
+        assert_eq!(
+            Locale::from_env(env(&[("LANG", "he_IL.UTF-8")])),
+            Locale::He
+        );
+        assert_eq!(
+            Locale::from_env(env(&[("LANG", "he_IL.UTF-8"), ("LC_ALL", "en_US.UTF-8")])),
+            Locale::En
+        );
+        assert_eq!(
+            Locale::from_env(env(&[("LC_MESSAGES", "fr_FR.UTF-8"), ("LANG", "he_IL")])),
+            Locale::He
+        );
+    }
+
+    #[test]
+    fn posix_value_round_trips() {
+        for locale in Locale::ALL {
+            assert_eq!(Locale::from_tag(locale.posix()), Some(locale));
+            assert_ne!(locale.next(), locale);
+        }
     }
 }
