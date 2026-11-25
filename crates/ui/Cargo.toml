@@ -11,5 +11,14 @@ publish.workspace = true
 [dependencies]
 i18n.workspace = true
 
+iced_core = "0.14.0"
+iced_graphics = "0.14.0"
+iced_runtime = "0.14.0"
+# The renderer always builds its window backend; only Wayland is wanted.
+iced_tiny_skia = { version = "0.14.1", default-features = false, features = ["wayland"] }
+iced_widget = "0.14.2"
+smithay-client-toolkit = { version = "0.21.1", default-features = false, features = ["calloop"] }
+wayland-client = "0.31"
+
 [lints]
 workspace = true
