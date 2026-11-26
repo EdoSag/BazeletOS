@@ -51,6 +51,10 @@ impl State {
                     return;
                 };
                 if event.state() == ButtonState::Pressed && !pointer.is_grabbed() {
+                    // A window may have opened or closed under a pointer that
+                    // did not move, so look again at what is under it. The
+                    // click must go to the surface the user can see.
+                    self.refresh_pointer_focus();
                     self.raise_window_under_pointer();
                 }
                 pointer.button(
@@ -140,9 +144,10 @@ impl State {
         self.refresh_focus();
     }
 
-    /// Takes the pointer away from whatever has it. The next pointer event
-    /// picks the surface again under the current rules.
-    pub fn clear_pointer_focus(&mut self) {
+    /// Gives the pointer to whatever is under it now, under the current
+    /// rules. Called when what is on screen changed without the pointer
+    /// moving: on lock and unlock, when a window closes, and before a click.
+    pub fn refresh_pointer_focus(&mut self) {
         let Some(pointer) = self.seat.get_pointer() else {
             return;
         };
