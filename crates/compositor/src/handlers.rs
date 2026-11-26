@@ -225,6 +225,7 @@ impl XdgShellHandler for State {
             self.space.unmap_elem(&window);
         }
         self.refresh_focus();
+        self.refresh_pointer_focus();
     }
 
     fn new_popup(&mut self, surface: PopupSurface, _positioner: PositionerState) {
@@ -338,9 +339,8 @@ impl SessionLockHandler for State {
         // lock can be confirmed at once.
         confirmation.lock();
         self.refresh_focus();
-        // Pointer focus is recomputed on the next pointer event; clear it now
-        // so no app keeps receiving input.
-        self.clear_pointer_focus();
+        // Move pointer focus now, so no app keeps receiving input.
+        self.refresh_pointer_focus();
     }
 
     fn unlock(&mut self) {
@@ -348,7 +348,7 @@ impl SessionLockHandler for State {
         self.lock_holder = None;
         self.lock_surface = None;
         self.refresh_focus();
-        self.clear_pointer_focus();
+        self.refresh_pointer_focus();
     }
 
     fn new_surface(&mut self, surface: LockSurface, _output: WlOutput) {
