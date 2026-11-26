@@ -1,14 +1,20 @@
-//! Layout direction helpers.
+//! The system's UI toolkit layer.
 //!
 //! Screens are described in logical terms, "start" and "end", never "left"
-//! and "right". These helpers turn the logical description into a physical
-//! one for the current [`Direction`], so every screen mirrors for
-//! right-to-left languages without per-screen work.
+//! and "right". The helpers at the top of this crate turn the logical
+//! description into a physical one for the current [`Direction`], so every
+//! screen mirrors for right-to-left languages without per-screen work. They
+//! know nothing about a UI toolkit, which keeps the rules easy to test.
 //!
-//! This crate knows nothing about a UI toolkit. It only holds the rules,
-//! which keeps them easy to test.
+//! [`widget`] applies those rules to the toolkit's widgets, and [`runtime`]
+//! shows screens on Wayland surfaces. See
+//! `docs/adr/0004-ui-toolkit-and-font.md`.
+
+pub mod runtime;
+pub mod widget;
 
 pub use i18n::Direction;
+pub use runtime::{Element, Renderer, Theme};
 
 /// A physical horizontal side.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

@@ -24,6 +24,8 @@ jobs:
       # rust-toolchain.toml pins the version and components.
       - name: Install the Rust toolchain
         run: rustup show active-toolchain || rustup toolchain install
+      - name: Install system libraries
+        run: sudo apt-get update && sudo apt-get install --yes libxkbcommon-dev
       - name: Format
         run: cargo fmt --all --check
       - name: Clippy

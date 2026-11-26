@@ -17,6 +17,8 @@ pub enum Component {
     Compositor,
     /// The lock screen and home screen.
     Shell,
+    /// The app that says what this system is.
+    About,
 }
 
 impl Component {
@@ -25,6 +27,7 @@ impl Component {
         match self {
             Self::Compositor => "Compositor",
             Self::Shell => "Shell",
+            Self::About => "About",
         }
     }
 
@@ -61,7 +64,7 @@ mod tests {
 
     #[test]
     fn app_ids_are_valid_bus_names() {
-        for component in [Component::Compositor, Component::Shell] {
+        for component in [Component::Compositor, Component::Shell, Component::About] {
             let id = component.app_id();
             assert!(is_valid_bus_name(&id), "{id} is not a valid bus name");
         }

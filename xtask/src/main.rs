@@ -10,7 +10,7 @@ const USAGE: &str = "\
 Usage: cargo xtask <command>
 
 Commands:
-  run     Start the session: the compositor, then the shell
+  run     Start the session in a window: lock screen, then home screen
   check   Run the checks CI runs: fmt, clippy and tests
   help    Show this message
 ";
@@ -52,10 +52,17 @@ fn cargo(args: &[&str]) -> bool {
 }
 
 fn run() -> bool {
-    // Until the compositor exists, both programs only print a placeholder.
-    // This command stays the one entry point as they become real.
-    cargo(&["run", "--quiet", "--package", "compositor"])
-        && cargo(&["run", "--quiet", "--package", "shell"])
+    // The compositor starts the shell, and the shell starts apps, from the
+    // directory the compositor itself is in. So all three are built first.
+    cargo(&[
+        "build",
+        "--package",
+        "compositor",
+        "--package",
+        "shell",
+        "--package",
+        "about",
+    ]) && cargo(&["run", "--quiet", "--package", "compositor"])
 }
 
 fn check() -> bool {

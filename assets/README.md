@@ -1,7 +1,10 @@
 # Assets
 
-Fonts and icons that ship with the shell go here.
+Fonts and icons that ship with the system.
 
-Nothing is bundled yet. The first build needs a Hebrew-capable font under
-an open licence (for example the SIL Open Font License); which one is still
-to be chosen and recorded in an ADR.
+| Path | What | Licence |
+| --- | --- | --- |
+| `fonts/Heebo-Regular.ttf`, `fonts/Heebo-Bold.ttf` | [Heebo](https://github.com/OdedEzer/heebo), a Hebrew and Latin typeface. Copyright 2014 The Heebo Project Authors. Unmodified. | [SIL Open Font License 1.1](../LICENSES/OFL-1.1.txt) |
+
+The font is compiled into the programs by `crates/ui`. The choice is
+recorded in [ADR 0004](../docs/adr/0004-ui-toolkit-and-font.md).

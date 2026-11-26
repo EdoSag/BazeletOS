@@ -359,7 +359,7 @@ Emergency calls and cell-broadcast alerts are release blockers: no build is call
 - Every layout mirrors automatically for right-to-left languages; no screen is designed left-to-right only.
 - Mixed Hebrew and English text follows the Unicode bidirectional algorithm, including in notifications, the dialer and the keyboard's suggestion bar.
 - A Hebrew keyboard layout and a bundled Hebrew font ship in the first build.
-- The UI toolkit is chosen partly on its right-to-left and text-shaping support.
+- The UI toolkit is chosen partly on its right-to-left and text-shaping support. Chosen: iced, drawn in software on our own Wayland surfaces, with the Heebo font bundled ([ADR 0004](adr/0004-ui-toolkit-and-font.md)).
 - Test strings include mixed-direction text, numbers inside Hebrew, and long words that must wrap.
 
 Open questions:
@@ -431,6 +431,8 @@ Five phases lead to version one, each ending at a gate you can see.
 
 After version one: Android apps in Waydroid, push service, backup and migration, Servo as default, second phone.
 
+Phase 2 has a desktop gate before the phone gate: one command starts the compositor in a window on a Linux desktop, shows a lock screen, unlocks to a home screen and launches an app, in English and Hebrew. That gate needs a basic lock screen, so the lock screen starts in phase 2 as a screen with no passcode; passcodes and what they unlock stay in phases 3 and 5. How the compositor, lock screen and home screen fit together is in [ADR 0005](adr/0005-shell-and-session-lock.md).
+
 Each phase ends at something that can be shown on the phone, and the next phase does not start until it works. No dates are set yet; they depend on hours per week and on which phone we choose.
 
 First steps:
@@ -438,6 +440,7 @@ First steps:
 - [x] Choose the name (BazeletOS, working name)
 - [ ] Search the trademark registers and register a domain
 - [x] Create the public repository with the licenses
+- [x] Desktop gate: lock screen, home screen and app launch in a window
 - [ ] Buy the development phone and two test SIMs
 - [ ] List the plugins the Zero-Trust apps use
 - [ ] Read NLnet Restack's guide and pick the January or March deadline
